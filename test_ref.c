@@ -79,7 +79,7 @@ int main(int argc, char **argv)
             " q  quit, freeing all data\n\n"
             "choice: ");
 
-        if (argc > 1 && strcmp(argv[1], "--bench") == 0)  // a for auto
+        if (argc > 2 && strcmp(argv[1], "--bench") == 0)  // a for auto
             strcpy(word, argv[2]);
         else
             fgets(word, sizeof word, stdin);
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
         switch (*word) {
         case 'a':
             printf("enter word to add: ");
-            if (argc > 1 && strcmp(argv[1], "--bench") == 0)
+            if (argc > 3 && strcmp(argv[1], "--bench") == 0)
                 strcpy(Top, argv[3]);
 
             else if (!fgets(Top, sizeof word, stdin)) {
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
         case 's':
             printf("find words matching prefix (at least 1 char): ");
 
-            if (argc > 1 && strcmp(argv[1], "--bench") == 0)
+            if (argc > 3 && strcmp(argv[1], "--bench") == 0)
                 strcpy(word, argv[3]);
             else if (!fgets(word, sizeof word, stdin)) {
                 fprintf(stderr, "error: insufficient input.\n");
@@ -193,6 +193,7 @@ int main(int argc, char **argv)
         quit:
         case 'q':
             tst_free(root);
+            bloom_free(bloom);
             return 0;
             break;
         default:
