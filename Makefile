@@ -1,6 +1,7 @@
 TESTS = test_cpy test_ref
 
 TEST_DATA = s Tai
+TEST_FIND = f Taiwan
 
 CFLAGS = -O0 -Wall -Werror -g
 
@@ -50,10 +51,28 @@ test:  $(TESTS)
                 -e cache-misses,cache-references,instructions,cycles \
 				./test_ref --bench $(TEST_DATA)
 
-bench: $(TESTS)
+test_find:  $(TESTS)
+	echo 3 | sudo tee /proc/sys/vm/drop_caches;
+	perf stat --repeat 100 \
+                -e cache-misses,cache-references,instructions,cycles \
+				./test_ref --bench $(TEST_FIND)
+
+test_plot:
+	gnuplot scripts/runtimeFind.gp
+	eog runtimeFind.png
+
+bench_test: $(TESTS)
 	@for test in $(TESTS); do\
 		./$$test --bench $(TEST_DATA); \
 	done
+
+bench: $(TESTS)
+	./test_cpy --bench; \
+
+plot: bench
+	gnuplot scripts/runtime3.gp
+	eog runtime3.png
+
 
 clean:
 	$(RM) $(TESTS) $(OBJS)
